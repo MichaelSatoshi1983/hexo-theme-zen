@@ -4,6 +4,11 @@ menu:
   首页: /
   关于: about.html
 
+code_highlight:
+  copy_button: true
+  copy_text: 复制
+  copied_text: 已复制
+
 copyright:
   name: Yojigen.Tech
 

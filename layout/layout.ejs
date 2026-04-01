@@ -9,5 +9,14 @@
         <% if (page.path !== '404.html') { %>
             <%- partial('partial/footer') %>
         <% } %>
+        <% if (!theme.code_highlight || theme.code_highlight.copy_button !== false) { %>
+            <script>
+                window.ZenThemeCodeHighlight = {
+                    copy_text: <%- JSON.stringify((theme.code_highlight && theme.code_highlight.copy_text) || '复制') %>,
+                    copied_text: <%- JSON.stringify((theme.code_highlight && theme.code_highlight.copied_text) || '已复制') %>
+                };
+            </script>
+            <script src="<%- url_for('js/code-copy.js') %>"></script>
+        <% } %>
     </body>
 </html>
