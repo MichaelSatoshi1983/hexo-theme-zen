@@ -24,6 +24,10 @@
 
   --toggle-bg: rgba(255, 255, 255, 0.88);
   --toggle-border: rgba(120, 120, 120, 0.28);
+
+  --blockquote-border-color: #3273dc;
+  --blockquote-background-color: rgba(50, 115, 220, 0.06);
+  --blockquote-text-color: var(--text-color);
 }
 
 html[data-theme='dark'] {
@@ -44,6 +48,10 @@ html[data-theme='dark'] {
 
   --toggle-bg: rgba(32, 32, 32, 0.9);
   --toggle-border: rgba(220, 220, 220, 0.22);
+
+  --blockquote-border-color: #6fa3ff;
+  --blockquote-background-color: rgba(111, 163, 255, 0.08);
+  --blockquote-text-color: var(--text-color);
 }
 
 html {
@@ -126,10 +134,26 @@ button {
 
 blockquote,
 .post-content blockquote {
-  border-left: 1px solid var(--border-color);
-  color: var(--text-color);
-  padding-left: 20px;
+  border-left: 4px solid var(--blockquote-border-color);
+  background-color: var(--blockquote-background-color);
+  color: var(--blockquote-text-color);
+  padding: 1em 1.25em;
+  margin: 1.5em 0;
+  border-radius: 0 8px 8px 0;
   font-style: italic;
+}
+
+blockquote blockquote,
+.post-content blockquote blockquote {
+  border-left-color: rgba(50, 115, 220, 0.5);
+  background-color: rgba(50, 115, 220, 0.04);
+  margin: 1em 0;
+}
+
+html[data-theme='dark'] blockquote blockquote,
+html[data-theme='dark'] .post-content blockquote blockquote {
+  border-left-color: rgba(111, 163, 255, 0.5);
+  background-color: rgba(111, 163, 255, 0.05);
 }
 
 table {
@@ -647,6 +671,13 @@ html.theme-animating #beaudar-container .beaudar-theme-mask {
   .pagination-next {
     width: 100%;
     justify-content: center;
+  }
+
+  blockquote,
+  .post-content blockquote {
+    padding: 0.875em 1em;
+    margin: 1.25em 0;
+    border-radius: 0 6px 6px 0;
   }
 }
 
