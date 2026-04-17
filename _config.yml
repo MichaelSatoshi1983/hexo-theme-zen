@@ -1,5 +1,8 @@
 favicon: favicon.jpg
 
+# Number of posts per page on homepage
+per_page: 10
+
 menu:
   首页: /
   标签: /tags/

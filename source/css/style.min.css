@@ -593,6 +593,63 @@ html.theme-animating #beaudar-container .beaudar-theme-mask {
   transition-timing-function: var(--theme-transition-easing);
 }
 
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.pagination-prev,
+.pagination-next {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: var(--link-color);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-prev:hover,
+.pagination-next:hover {
+  background-color: var(--surface-color);
+  text-decoration: none;
+}
+
+.pagination-prev.disabled,
+.pagination-next.disabled {
+  color: var(--muted-text-color);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pagination-prev::before {
+  content: "←";
+  margin-right: 0.5rem;
+}
+
+.pagination-next::after {
+  content: "→";
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pagination-prev,
+  .pagination-next {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.theme-animating *,
   html.theme-animating *::before,

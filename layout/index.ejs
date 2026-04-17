@@ -1,6 +1,6 @@
 <main>
     <ul class="blog-posts">
-        <% var posts=site.posts.sort('date', 'desc' ); %>
+        <% var posts=page.posts.sort('date', 'desc' ); %>
             <% posts.forEach(post=> { %>
                 <li>
                     <span class="post-date">
@@ -14,4 +14,16 @@
                 </li>
                 <% }) %>
     </ul>
+    <nav class="pagination">
+        <% if (page.prev) { %>
+            <a class="pagination-prev" href="<%- url_for(page.prev_link) %>">上一页</a>
+        <% } else { %>
+            <span class="pagination-prev disabled">上一页</span>
+        <% } %>
+        <% if (page.next) { %>
+            <a class="pagination-next" href="<%- url_for(page.next_link) %>">下一页</a>
+        <% } else { %>
+            <span class="pagination-next disabled">下一页</span>
+        <% } %>
+    </nav>
 </main>
