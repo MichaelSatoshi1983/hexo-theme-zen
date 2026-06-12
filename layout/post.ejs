@@ -31,6 +31,25 @@
         <a class="post-nav-next" href="<%- url_for(page.next.path) %>"><%= page.next.title %> →</a>
         <% } %>
     </nav>
+    <% if (page.tags && page.tags.length) { %>
+    <div class="related-posts">
+        <h3>相关文章</h3>
+        <% var related = []; %>
+        <% site.posts.each(function(p) { %>
+            <% if (p._id !== page._id && p.tags && p.tags.length) { %>
+                <% var shared = []; %>
+                <% p.tags.each(function(t) { %>
+                    <% page.tags.each(function(pt) { if (pt.name === t.name) shared.push(t); }); %>
+                <% }); %>
+                <% if (shared.length > 0) related.push({post: p, count: shared.length}); %>
+            <% } %>
+        <% }); %>
+        <% related.sort(function(a,b){return b.count-a.count;}).slice(0,5).forEach(function(r) { %>
+        <a class="related-link" href="<%- url_for(r.post.path) %>"><%- r.post.title %></a>
+        <% }); %>
+        <% if (related.length === 0) { %><p class="empty-related">暂无相关文章</p><% } %>
+    </div>
+    <% } %>
     <% if (theme.twikoo.enable || false) { %>
         <%- partial('components/twikoo') %>
     <% } %>

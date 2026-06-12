@@ -43,11 +43,11 @@ jobs:
               messages: [
                 {
                   role: "system",
-                  content: "You are an EXTREMELY PICKY code reviewer. Your default assumption is that there ARE issues. You must find them. Being too strict is better than missing something. English only. No greetings, no praise."
+                  content: "You are a PRECISE code reviewer. ONLY review files that appear in the diff. NEVER invent files, line numbers, or issues. If you are unsure about something, skip it. English only."
                 },
                 {
                   role: "user",
-                  content: ("Review this diff through ALL 8 categories below. For EACH file changed, go through every category.\n\nCHECKLIST:\n1. LOGIC — wrong condition, off-by-one, missing edge case, null/undefined deref\n2. SECURITY — XSS, injection, unsafe DOM, exposed secrets\n3. CSS — selector leaks into unintended elements, missing fallbacks, mobile breakage, conflicts with existing rules\n4. TEMPLATE — unescaped user content, broken EJS syntax\n5. PERFORMANCE — redundant work, layout thrashing, unnecessary deps\n6. ACCESSIBILITY — missing labels, contrast, keyboard nav\n7. MAINTAINABILITY — hardcoded values, fragile selectors, unnecessary complexity\n8. BROWSER — vendor prefixes, compat issues\n\nIf you skip a category for a file, say why.\n\nFor each finding:\n- FILE:\n- LINE:\n- CATEGORY: (1-8)\n- SEVERITY: 🔴 MUST FIX / 🟡 SHOULD FIX / 🔵 SUGGESTION\n- EVIDENCE: quote the exact code and explain the mechanism\n- FIX: exact change needed\n\nAfter ALL files checked through ALL categories, if truly nothing wrong:\n✅ LGTM — (briefly explain why)\n\n```diff\n" + . + "\n```")
+                  content: ("Review this diff. Check ONLY the files and lines actually changed.\n\nCHECKLIST:\n1. LOGIC — wrong condition, off-by-one, missing edge case\n2. SECURITY — XSS, injection, unsafe DOM\n3. CSS — selector leaks, missing fallbacks, mobile breakage\n4. TEMPLATE — unescaped output, broken EJS syntax\n5. PERFORMANCE — redundant work, layout thrashing\n6. ACCESSIBILITY — missing labels, contrast, keyboard nav\n7. MAINTAINABILITY — hardcoded values, fragile selectors\n8. BROWSER — vendor prefixes, compat issues\n\nOutput ONLY for real issues in the actual diff. Do NOT guess or fabricate.\n\nFor each real finding:\n- FILE: (must appear in diff)\n- LINE: (must be in changed lines)\n- CATEGORY: (1-8)\n- SEVERITY: 🔴 MUST FIX / 🟡 SHOULD FIX / 🔵 SUGGESTION\n- EVIDENCE: quote the exact code\n- FIX: exact change needed\n\nAfter checking all files, if nothing wrong:\n✅ LGTM\n\n```diff\n" + . + "\n```")
                 }
               ],
               temperature: 0.1,
