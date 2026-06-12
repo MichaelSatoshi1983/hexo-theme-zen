@@ -1,0 +1,67 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:3.19
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Review
+        env:
+          SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          apk add --no-cache curl jq git > /dev/null
+
+          git diff origin/${{ github.base_ref }}...HEAD | tail -c 40000 > /tmp/diff.txt
+
+          post() {
+            local body
+            body=$(jq -Rs '{body: "## 🤖 AI Code Review\n\n\(.)"}' <<< "$1")
+            curl -s -X POST \
+              -H "Authorization: token $GH_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+              -d "$body" > /dev/null
+          }
+
+          if [ -z "$SILICONFLOW_API_KEY" ]; then
+            post "⚠️ SILICONFLOW_API_KEY not set. Add it to GitHub Secrets."
+            exit 0
+          fi
+
+          JSON=$(jq -n \
+            --rawfile diff /tmp/diff.txt \
+            '{
+              model: "deepseek-ai/DeepSeek-V3.2",
+              messages: [
+                {
+                  role: "system",
+                  content: "You are a code reviewer. Review PR diffs. Be ruthlessly concise — no greetings, no praise, no summaries, no commentary. Save tokens. English only."
+                },
+                {
+                  role: "user",
+                  content: ("Review this diff for bugs, security issues, logic errors. For each:\n- FILE:\n- LINE:\n- SEVERITY: 🔴/🟡/🔵\n- PROBLEM:\n- FIX:\n\nNothing wrong → only: ✅ LGTM\n\n```diff\n" + $diff + "\n```")
+                }
+              ],
+              temperature: 0.1,
+              max_tokens: 1000
+            }')
+
+          RESPONSE=$(curl -s https://api.siliconflow.cn/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $SILICONFLOW_API_KEY" \
+            -d "$JSON")
+
+          REVIEW=$(echo "$RESPONSE" | jq -r '.choices[0].message.content // "Error: " + (.error.message // "unknown")')
+
+          post "$REVIEW"
