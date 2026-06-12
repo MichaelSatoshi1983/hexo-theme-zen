@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="https://cn-font.claude-code-best.win/packages/maple-mono-cn/dist/MapleMono-CN-Regular/result.css">
     <link rel="stylesheet" href="https://cn-font.claude-code-best.win/packages/LxgwNeoZhiSong/dist/LXGWNeoZhiSong/result.css">
     <style>
+        html { scroll-behavior: smooth; }
         :root {
           --font-main: "LXGW Neo ZhiSong", Verdana, sans-serif;
           --font-secondary: "LXGW Neo ZhiSong", Verdana, sans-serif;
@@ -97,6 +98,7 @@
         img { border-radius: 4px; }
         .post-date i, .post-date time,
         main > p > i { font-style: normal; }
+        .reading-time { color: var(--muted-text-color); }
         code { font-size: 0.82em; font-family: "Maple Mono CN", monospace; }
         .post-content figure.highlight td.gutter pre,
         .post-content figure.highlight td.code pre,
@@ -116,6 +118,7 @@
         .post-content .anchor { opacity: 0; margin-left: 6px; color: var(--muted-text-color); text-decoration: none; font-weight: 400; }
         .post-content .anchor:hover { color: var(--link-color); }
         .code-copy { position: absolute; top: 6px; right: 8px; padding: 2px 8px; font-size: 0.78em; border: 1px solid var(--border-color); border-radius: 4px; background: var(--surface-color); color: var(--muted-text-color); cursor: pointer; opacity: 0; transition: opacity 0.2s; z-index: 1; }
+        .code-lang { position: absolute; top: 6px; left: 8px; font-size: 0.75em; color: var(--muted-text-color); text-transform: lowercase; user-select: none; }
         .post-content figure.highlight:hover .code-copy,
         .post-content .highlight:not(figure):hover .code-copy { opacity: 1; }
         .post-content figure.highlight, .post-content .highlight:not(figure) { position: relative; }
@@ -129,6 +132,16 @@
                 a.href = '#' + h.id;
                 a.textContent = '#';
                 h.appendChild(a);
+            });
+            // Code language label
+            document.querySelectorAll('.post-content figure.highlight').forEach(function(fig){
+                var cls = fig.className.match(/highlight\s+(\w+)/);
+                if (cls) {
+                    var tag = document.createElement('span');
+                    tag.className = 'code-lang';
+                    tag.textContent = cls[1];
+                    fig.appendChild(tag);
+                }
             });
             // Code copy
             document.querySelectorAll('.post-content pre').forEach(function(pre){

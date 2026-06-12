@@ -6,6 +6,12 @@
     <% } %>
     <p>
         <i><time><%= date(page.date, 'YYYY/MM/DD HH:mm:ss' ) %></time></i>
+        <% if (page.content) {
+            var words = page.content.replace(/<[^>]*>/g, '').length;
+            var min = Math.max(1, Math.round(words / 300));
+        %>
+        <span class="reading-time">· <%= min %> 分钟阅读</span>
+        <% } %>
     </p>
     <% if (page.tags && page.tags.length) { %>
     <p class="post-tags">
