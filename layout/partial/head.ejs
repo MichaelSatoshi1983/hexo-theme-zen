@@ -29,6 +29,13 @@
     <link rel="stylesheet" href="https://cn-font.claude-code-best.win/packages/LxgwNeoZhiSong/dist/LXGWNeoZhiSong/result.css">
     <style>
         html { scroll-behavior: smooth; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        main { animation: fadeIn 0.5s ease; }
+        a { transition: color 0.2s; }
+        .post-content blockquote { transition: border-color 0.2s; }
+        .post-content blockquote:hover { border-color: var(--link-color); }
+        ul.blog-posts li { transition: transform 0.15s; }
+        ul.blog-posts li:hover { transform: translateX(4px); }
         :root {
           --font-main: "LXGW Neo ZhiSong", Verdana, sans-serif;
           --font-secondary: "LXGW Neo ZhiSong", Verdana, sans-serif;
