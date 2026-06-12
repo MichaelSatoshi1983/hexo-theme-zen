@@ -60,6 +60,11 @@
         .pagination-info { color: var(--muted-text-color); font-size: 0.9em; }
         .pagination-prev { flex: 1; }
         .pagination-next { flex: 1; text-align: right; }
+        .pagination .disabled { color: var(--muted-text-color); pointer-events: none; }
+        @media (max-width: 480px) {
+          .pagination { flex-direction: column; gap: 0.5em; text-align: center; }
+          .pagination-next { text-align: center; }
+        }
         code { font-size: 0.82em; }
         .post-content figure.highlight td.gutter pre,
         .post-content figure.highlight td.code pre,
