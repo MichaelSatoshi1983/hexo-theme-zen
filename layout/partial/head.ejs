@@ -125,9 +125,53 @@
         .post-content figure.highlight:hover .code-copy,
         .post-content .highlight:not(figure):hover .code-copy { opacity: 1; }
         .post-content figure.highlight, .post-content .highlight:not(figure) { position: relative; }
+        .toc-wrap { position: fixed; left: 50%; top: 100px; margin-left: 400px; width: 220px; font-size: 0.84em; max-height: 70vh; overflow-y: auto; display: none; }
+        .toc-wrap a { display: block; color: var(--muted-text-color); padding: 2px 0; text-decoration: none; border-left: 2px solid transparent; padding-left: 12px; }
+        .toc-wrap a:hover { color: var(--link-color); }
+        .toc-wrap a.active { color: var(--heading-color); border-left-color: var(--link-color); }
+        .toc-wrap .toc-h3 { padding-left: 24px; font-size: 0.95em; }
+        .related-posts { margin: 1.5em 0; padding-top: 1em; }
+        .related-posts h3 { font-size: 1em; margin-bottom: 0.5em; }
+        .related-link { display: inline-block; margin-right: 12px; margin-bottom: 6px; color: var(--link-color); font-size: 0.92em; }
+        .related-link:hover { text-decoration: underline; }
+        .empty-related { color: var(--muted-text-color); font-size: 0.9em; }
+        @media (min-width: 1200px) { .toc-wrap { display: block; } }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function(){
+            // TOC
+            var toc = document.createElement('nav');
+            toc.className = 'toc-wrap';
+            var headings = document.querySelectorAll('.post-content h2, .post-content h3');
+            if (headings.length > 0) {
+                var html = '';
+                headings.forEach(function(h){
+                    if (!h.id) h.id = h.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w一-鿿-]/g, '');
+                    var cls = h.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
+                    html += '<a class="' + cls + '" href="#' + h.id + '">' + h.textContent.replace(/#$/, '') + '</a>';
+                });
+                toc.innerHTML = html;
+                document.body.appendChild(toc);
+                var links = toc.querySelectorAll('a');
+                // Click TOC → immediate highlight, no scroll-position race
+                links.forEach(function(l){
+                    l.addEventListener('click', function(){
+                        links.forEach(function(x){ x.classList.remove('active'); });
+                        l.classList.add('active');
+                    });
+                });
+                // Scroll → highlight nearest heading within 50px of viewport top
+                window.addEventListener('scroll', function(){
+                    var cur = '';
+                    for (var i = headings.length - 1; i >= 0; i--) {
+                        if (headings[i].getBoundingClientRect().top <= 50) {
+                            cur = '#' + headings[i].id; break;
+                        }
+                    }
+                    if (!cur && headings.length) cur = '#' + headings[0].id;
+                    links.forEach(function(l){ l.classList.toggle('active', l.getAttribute('href') === cur); });
+                });
+            }
             // Heading anchors
             document.querySelectorAll('.post-content h1[id],.post-content h2[id],.post-content h3[id],.post-content h4[id],.post-content h5[id],.post-content h6[id]').forEach(function(h){
                 var a = document.createElement('a');
