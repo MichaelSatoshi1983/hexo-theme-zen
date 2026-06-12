@@ -36,6 +36,29 @@
           font-style: normal;
           background: var(--surface-color);
         }
+        .post-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1em 0;
+          font-size: 0.95em;
+        }
+        .post-content th, .post-content td {
+          border: 1px solid var(--border-color);
+          padding: 8px 12px;
+          text-align: left;
+        }
+        .post-content th {
+          background: var(--surface-color);
+          font-weight: 600;
+        }
+        .post-content tr:nth-child(even) {
+          background: var(--surface-color);
+        }
+        @media (max-width: 600px) {
+          .post-content table { display: block; overflow-x: auto; }
+        }
+        /* prevent table font-size cascading into code blocks */
+        .post-content figure.highlight table { font-size: inherit; }
         .post-nav {
           display: flex;
           justify-content: space-between;
