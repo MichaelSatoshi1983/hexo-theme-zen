@@ -27,6 +27,15 @@
     <%- css('css/partial/atom-one-dark.min') %>
     <style>
         @import url('https://fonts.font.im/css?family=IBM+Plex+Mono');
+
+        .post-content blockquote {
+          border-left: 4px solid var(--border-color);
+          color: var(--text-color);
+          padding: 4px 0 4px 20px;  /* 微上下padding撑出框感，不显留白 */
+          margin: 1em 0;
+          font-style: normal;
+          background: var(--surface-color);
+        }
     </style>
     <script src="<%- url_for('js/theme-toggle.js') %>"></script>
 </head>
