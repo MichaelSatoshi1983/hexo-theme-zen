@@ -31,10 +31,40 @@
         .post-content blockquote {
           border-left: 4px solid var(--border-color);
           color: var(--text-color);
-          padding: 4px 0 4px 20px;  /* 微上下padding撑出框感，不显留白 */
+          padding: 4px 0 4px 20px;
           margin: 1em 0;
           font-style: normal;
           background: var(--surface-color);
+        }
+        .post-nav {
+          display: flex;
+          justify-content: space-between;
+          margin: 2em 0;
+          padding-top: 1em;
+          border-top: 1px solid var(--border-color);
+          gap: 1em;
+        }
+        .post-nav a {
+          max-width: 45%;
+          color: var(--link-color);
+        }
+        .post-nav-next { margin-left: auto; text-align: right; }
+        .pagination {
+          margin: 2em 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .pagination a { color: var(--link-color); }
+        .pagination a:hover { text-decoration: underline; }
+        .pagination-info { color: var(--muted-text-color); font-size: 0.9em; }
+        .pagination-prev { flex: 1; }
+        .pagination-next { flex: 1; text-align: right; }
+        code { font-size: 0.82em; }
+        .post-content figure.highlight td.gutter pre,
+        .post-content figure.highlight td.code pre,
+        .post-content .highlight:not(figure) pre {
+          font-size: 0.82em;
         }
     </style>
     <script src="<%- url_for('js/theme-toggle.js') %>"></script>
