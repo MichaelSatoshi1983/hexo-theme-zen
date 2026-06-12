@@ -100,15 +100,9 @@
   }
 
   function toggleTheme() {
-    const root = document.documentElement;
-    root.style.opacity = '0';
-    root.style.transition = 'opacity 0.15s';
-    setTimeout(function(){
-      const next = getCurrentTheme() === THEME_DARK ? THEME_LIGHT : THEME_DARK;
-      setStoredTheme(next);
-      applyTheme(next, { withAnimation: true, source: 'manual-toggle' });
-      root.style.opacity = '1';
-    }, 150);
+    const next = getCurrentTheme() === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+    setStoredTheme(next);
+    applyTheme(next, { withAnimation: true, source: 'manual-toggle' });
   }
 
   function bindSystemThemeSync() {
