@@ -57,6 +57,8 @@
         @media (max-width: 600px) {
           .post-content table { display: block; overflow-x: auto; }
         }
+        /* prevent table font-size cascading into code blocks */
+        .post-content figure.highlight table { font-size: inherit; }
         .post-nav {
           display: flex;
           justify-content: space-between;
