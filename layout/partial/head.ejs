@@ -25,8 +25,13 @@
     </title>
     <%- css('css/style.min') %>
     <%- css('css/partial/atom-one-dark.min') %>
+    <link rel="stylesheet" href="https://cn-font.claude-code-best.win/packages/maple-mono-cn/dist/MapleMono-CN-Regular/result.css">
+    <link rel="stylesheet" href="https://cn-font.claude-code-best.win/packages/LxgwNeoZhiSong/dist/LXGWNeoZhiSong/result.css">
     <style>
-        @import url('https://fonts.font.im/css?family=IBM+Plex+Mono');
+        :root {
+          --font-main: "LXGW Neo ZhiSong", Verdana, sans-serif;
+          --font-secondary: "LXGW Neo ZhiSong", Verdana, sans-serif;
+        }
 
         .post-content blockquote {
           border-left: 4px solid var(--border-color);
@@ -88,11 +93,12 @@
           .pagination { flex-direction: column; gap: 0.5em; text-align: center; }
           .pagination-next { text-align: center; }
         }
-        code { font-size: 0.82em; }
+        code { font-size: 0.82em; font-family: "Maple Mono CN", monospace; }
         .post-content figure.highlight td.gutter pre,
         .post-content figure.highlight td.code pre,
         .post-content .highlight:not(figure) pre {
           font-size: 0.82em;
+          font-family: "Maple Mono CN", monospace;
         }
     </style>
     <script src="<%- url_for('js/theme-toggle.js') %>"></script>
