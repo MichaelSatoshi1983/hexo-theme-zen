@@ -120,8 +120,7 @@
         .post-content h6:hover .anchor { opacity: 1; }
         .post-content .anchor { opacity: 0; margin-left: 6px; color: var(--muted-text-color); text-decoration: none; font-weight: 400; }
         .post-content .anchor:hover { color: var(--link-color); }
-        .code-copy { position: absolute; top: 6px; right: 8px; padding: 2px 8px; font-size: 0.78em; border: 1px solid var(--border-color); border-radius: 4px; background: var(--surface-color); color: var(--muted-text-color); cursor: pointer; opacity: 0; transition: opacity 0.2s; z-index: 1; }
-        .code-lang { position: absolute; top: 6px; left: 8px; font-size: 0.75em; color: var(--muted-text-color); text-transform: lowercase; user-select: none; }
+        .code-copy { position: absolute; top: 6px; right: 8px; padding: 2px 8px; font-size: 0.78em; border: 1px solid var(--border-color); border-radius: 4px; background: var(--surface-color); color: var(--muted-text-color); cursor: pointer; opacity: 1; transition: opacity 0.2s; z-index: 1; }
         .post-content figure.highlight:hover .code-copy,
         .post-content .highlight:not(figure):hover .code-copy { opacity: 1; }
         .post-content figure.highlight, .post-content .highlight:not(figure) { position: relative; }
@@ -180,31 +179,40 @@
                 a.textContent = '#';
                 h.appendChild(a);
             });
-            // Code language label
-            document.querySelectorAll('.post-content figure.highlight').forEach(function(fig){
-                var cls = fig.className.match(/highlight\s+(\w+)/);
-                if (cls) {
-                    var tag = document.createElement('span');
-                    tag.className = 'code-lang';
-                    tag.textContent = cls[1];
-                    fig.appendChild(tag);
-                }
-            });
-            // Code copy
-            document.querySelectorAll('.post-content pre').forEach(function(pre){
+            // Show the code language on the copy button.
+            function languageFor(wrapper){
+                var match = (wrapper.className || '').match(/\bhighlight\s+([\w+#.-]+)/);
+                var language = match ? match[1] : 'Code';
+                if (language.toLowerCase() === 'plaintext') return 'Plain text';
+                if (language.toLowerCase() === 'text') return 'Text';
+                return language;
+            }
+            function addCopyButton(wrapper, pre){
+                var language = languageFor(wrapper);
                 var btn = document.createElement('button');
                 btn.className = 'code-copy';
-                btn.textContent = '复制';
-                var wrapper = pre.closest('.highlight, figure.highlight') || pre;
+                btn.textContent = language;
+                btn.setAttribute('aria-label', '复制 ' + language + ' 代码');
                 wrapper.style.position = 'relative';
                 wrapper.appendChild(btn);
                 btn.addEventListener('click', function(){
                     var code = pre.querySelector('code') || pre;
                     navigator.clipboard.writeText(code.textContent).then(function(){
                         btn.textContent = '已复制';
-                        setTimeout(function(){ btn.textContent = '复制'; }, 2000);
+                        btn.setAttribute('aria-label', '已复制');
+                        setTimeout(function(){
+                            btn.textContent = language;
+                            btn.setAttribute('aria-label', '复制 ' + language + ' 代码');
+                        }, 2000);
                     });
                 });
+            }
+            document.querySelectorAll('.post-content figure.highlight, .post-content .highlight:not(figure)').forEach(function(wrapper){
+                var pre = wrapper.querySelector('td.code pre') || wrapper.querySelector('pre');
+                if (pre) addCopyButton(wrapper, pre);
+            });
+            document.querySelectorAll('.post-content pre').forEach(function(pre){
+                if (!pre.closest('.highlight')) addCopyButton(pre, pre);
             });
         });
     </script>
