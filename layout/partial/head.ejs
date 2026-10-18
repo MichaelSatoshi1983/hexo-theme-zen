@@ -27,6 +27,10 @@
     <%- css('css/partial/atom-one-dark.min') %>
     <link rel="stylesheet" href="https://cn-font.claude-code-best.win/packages/maple-mono-cn/dist/MapleMono-CN-Regular/result.css">
     <link rel="stylesheet" href="https://cn-font.claude-code-best.win/packages/LxgwNeoZhiSong/dist/LXGWNeoZhiSong/result.css">
+    <% if (page.path === 'index.html') { %>
+    <link rel="preload" href="<%- url_for('fonts/lxgw-home-core.bb10fed3e430.woff2') %>" as="font" type="font/woff2" crossorigin="anonymous">
+    <%- css('css/fonts/lxgw-home-core') %>
+    <% } %>
     <style>
         html { scroll-behavior: smooth; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -36,6 +40,12 @@
           --font-main: "LXGW Neo ZhiSong", Verdana, sans-serif;
           --font-secondary: "LXGW Neo ZhiSong", Verdana, sans-serif;
         }
+        <% if (page.path === 'index.html') { %>
+        :root {
+          --font-main: "LXGW Neo ZhiSong Home Core", "LXGW Neo ZhiSong", Verdana, sans-serif;
+          --font-secondary: "LXGW Neo ZhiSong Home Core", "LXGW Neo ZhiSong", Verdana, sans-serif;
+        }
+        <% } %>
 
         .post-content blockquote {
           border-left: 4px solid var(--border-color);
