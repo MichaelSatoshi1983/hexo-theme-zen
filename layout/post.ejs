@@ -23,6 +23,9 @@
     <div class="post-content">
         <%- page.content %>
     </div>
+    <% if (theme.emaction && theme.emaction.enable && theme.emaction.endpoint) { %>
+        <%- partial('components/emaction') %>
+    <% } %>
     <nav class="post-nav">
         <% if (page.prev) { %>
         <a class="post-nav-prev" href="<%- url_for(page.prev.path) %>">← <%= page.prev.title %></a>

@@ -56,6 +56,8 @@
 
     animationTimer = window.setTimeout(function() {
       root.classList.remove(ANIMATION_CLASS);
+      animationTimer = null;
+      document.dispatchEvent(new CustomEvent('theme-transition-end'));
     }, ANIMATION_DURATION_MS);
   }
 
@@ -84,6 +86,18 @@
   function applyTheme(theme, options) {
     const opts = options || {};
     const previous = getCurrentTheme();
+
+    if (opts.withAnimation && previous !== theme) {
+      document.dispatchEvent(
+        new CustomEvent('theme-before-change', {
+          detail: {
+            theme: theme,
+            previous: previous,
+            source: opts.source || 'apply'
+          }
+        })
+      );
+    }
 
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.classList.toggle('dark', theme === THEME_DARK);

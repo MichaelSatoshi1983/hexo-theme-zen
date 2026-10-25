@@ -26,6 +26,12 @@ beaudar:
   # 填写用于 beaudar 评论系统的分支
   branch: main
 
+# Emaction 表情反应（在文章正文后显示 GitHub 风格的反应组件）
+emaction:
+  enable: false
+  endpoint:
+  availableArrayString: "👍,thumbs-up;😄,smile-face;🎉,party-popper;😕,confused-face;❤️,heart;🚀,rocket;👀,eyes;👎,thumbs-down;"
+
 # 底部友情链接配置
 friends:
   - name: 示例网站
