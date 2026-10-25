@@ -1,0 +1,121 @@
+<style>
+  .emaction-reactions {
+    display: flex;
+    justify-content: center;
+    margin: 24px auto 32px;
+    width: 100%;
+  }
+  .emaction-reactions > emoji-reaction {
+    display: block;
+    max-width: 100%;
+    --start-smile-border-color: var(--border-color);
+    --start-smile-border-color-hover: var(--muted-text-color);
+    --start-smile-bg-color: var(--surface-color);
+    --start-smile-svg-fill-color: var(--muted-text-color);
+    --reaction-got-not-reacted-bg-color: var(--background-color);
+    --reaction-got-not-reacted-bg-color-hover: var(--surface-color);
+    --reaction-got-not-reacted-border-color: var(--border-color);
+    --reaction-got-not-reacted-text-color: var(--text-color);
+    --reaction-got-reacted-bg-color: color-mix(in srgb, var(--link-color) 16%, var(--background-color));
+    --reaction-got-reacted-bg-color-hover: color-mix(in srgb, var(--link-color) 24%, var(--background-color));
+    --reaction-got-reacted-border-color: var(--link-color);
+    --reaction-got-reacted-text-color: var(--link-color);
+    --reaction-available-popup-bg-color: var(--background-color);
+    --reaction-available-popup-border-color: var(--border-color);
+    --reaction-available-popup-box-shadow: none;
+    --reaction-available-emoji-reacted-bg-color: color-mix(in srgb, var(--link-color) 16%, var(--background-color));
+    --reaction-available-emoji-bg-color-hover: var(--surface-color);
+  }
+</style>
+<div class="emaction-reactions">
+  <script type="module" src="https://cdn.jsdelivr.net/gh/emaction/frontend.dist@1.0.7/bundle.js"></script>
+  <emoji-reaction
+    endpoint="<%= theme.emaction.endpoint %>"
+    reacttargetid="<%= page.path %>"
+    theme="light"
+    availableArrayString="<%= theme.emaction.availableArrayString || '👍,thumbs-up;😄,smile-face;🎉,party-popper;😕,confused-face;❤️,heart;🚀,rocket;👀,eyes;👎,thumbs-down;' %>">
+  </emoji-reaction>
+  <script type="module">
+    await customElements.whenDefined("emoji-reaction");
+    const widget = document.querySelector(".emaction-reactions emoji-reaction");
+    const shadow = widget?.shadowRoot;
+
+    if (shadow && !shadow.querySelector("#zen-theme-transition")) {
+      const transitionStyle = document.createElement("style");
+      transitionStyle.id = "zen-theme-transition";
+      transitionStyle.textContent = `
+        :host(.theme-animating),
+        :host(.theme-animating) *,
+        :host(.theme-animating) *::before,
+        :host(.theme-animating) *::after {
+          transition-property: color, background-color, border-color, fill, stroke, box-shadow, text-decoration-color, outline-color !important;
+          transition-duration: var(--theme-transition-duration, 320ms) !important;
+          transition-timing-function: var(--theme-transition-easing, cubic-bezier(0.22, 1, 0.36, 1)) !important;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          :host(.theme-animating),
+          :host(.theme-animating) *,
+          :host(.theme-animating) *::before,
+          :host(.theme-animating) *::after {
+            transition: none !important;
+          }
+        }
+      `;
+      shadow.appendChild(transitionStyle);
+    }
+
+    function prepareThemeTransition() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      widget?.classList.add("theme-animating");
+      const transitionTarget = shadow?.querySelector("#start-smile");
+      if (transitionTarget) getComputedStyle(transitionTarget).backgroundColor;
+    }
+
+    function finishThemeTransition() {
+      widget?.classList.remove("theme-animating");
+    }
+
+    function syncTheme(theme) {
+      widget?.setAttribute("theme", theme === "dark" ? "dark" : "light");
+    }
+
+    syncTheme(document.documentElement.getAttribute("data-theme"));
+    document.addEventListener("theme-before-change", prepareThemeTransition);
+    document.addEventListener("theme-change", event => syncTheme(event.detail?.theme));
+    document.addEventListener("theme-transition-end", finishThemeTransition);
+
+    function positionPicker() {
+      const root = widget?.shadowRoot;
+      const picker = root?.querySelector(".reaction-available-popup");
+      const trigger = root?.querySelector("#start-smile");
+      if (!picker || !trigger || getComputedStyle(picker).display === "none") return;
+
+      picker.style.position = "fixed";
+      picker.style.zIndex = "90";
+      picker.style.top = "0px";
+      picker.style.left = "0px";
+      picker.style.right = "auto";
+
+      const triggerRect = trigger.getBoundingClientRect();
+      const pickerRect = picker.getBoundingClientRect();
+      const gap = 8;
+      const roomAbove = triggerRect.top;
+      const roomBelow = window.innerHeight - triggerRect.bottom;
+      const placeBelow = roomBelow >= pickerRect.height + gap || roomBelow >= roomAbove;
+      const wantedTop = placeBelow
+        ? triggerRect.bottom + gap
+        : triggerRect.top - pickerRect.height - gap;
+      const maxTop = Math.max(gap, window.innerHeight - pickerRect.height - gap);
+      const top = Math.max(gap, Math.min(wantedTop, maxTop));
+      const maxLeft = Math.max(gap, window.innerWidth - pickerRect.width - gap);
+      const left = Math.max(gap, Math.min(triggerRect.left, maxLeft));
+
+      picker.style.top = `${top}px`;
+      picker.style.left = `${left}px`;
+    }
+
+    widget?.addEventListener("click", () => requestAnimationFrame(positionPicker));
+    window.addEventListener("resize", positionPicker);
+    window.addEventListener("scroll", positionPicker, true);
+  </script>
+</div>
